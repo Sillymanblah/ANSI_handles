@@ -9,6 +9,8 @@ namespace ANSI
     namespace TEXT
     {
         const inline COMMAND DEFAULT           = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::DEFAULT );
+        const inline COMMAND& RESET            = DEFAULT;
+
         const inline COMMAND BLACK             = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BLACK );
         const inline COMMAND RED               = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::RED );
         const inline COMMAND GREEN             = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::GREEN );
@@ -17,6 +19,7 @@ namespace ANSI
         const inline COMMAND MAGENTA           = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::MAGENTA );
         const inline COMMAND CYAN              = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::CYAN );
         const inline COMMAND WHITE             = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::WHITE );
+
         const inline COMMAND BRIGHT_BLACK      = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BRIGHT_BLACK );
         const inline COMMAND BRIGHT_RED        = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BRIGHT_RED );
         const inline COMMAND BRIGHT_GREEN      = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BRIGHT_GREEN );
@@ -25,19 +28,18 @@ namespace ANSI
         const inline COMMAND BRIGHT_MAGENTA    = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BRIGHT_MAGENTA );
         const inline COMMAND BRIGHT_CYAN       = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BRIGHT_CYAN );
         const inline COMMAND BRIGHT_WHITE      = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BRIGHT_WHITE );
-
-        const inline COMMAND& RESET            = DEFAULT;
         
         namespace EFFECTS
         {
+            const inline COMMAND& DEFAULT      = RESET;
             const inline COMMAND RESET         = COMMAND( EFFECT::RESET_ALL );
 
             const inline COMMAND UNDERLINE_ON  = COMMAND( EFFECT::UNDERLINE );
             const inline COMMAND UNDERLINE_X2  = COMMAND( EFFECT::DOUBLE_UNDERLINE );
             const inline COMMAND UNDERLINE_OFF = COMMAND( EFFECT::RESET_UNDERLINE );
             
-            const inline COMMAND OVERLINE_ON     = COMMAND( EFFECT::OVERLINE );
-            const inline COMMAND OVERLINE_OFF    = COMMAND( EFFECT::RESET_OVERLINE );
+            const inline COMMAND OVERLINE_ON   = COMMAND( EFFECT::OVERLINE );
+            const inline COMMAND OVERLINE_OFF  = COMMAND( EFFECT::RESET_OVERLINE );
 
             const inline COMMAND BLINKING_ON   = COMMAND( EFFECT::BLINKING );
             const inline COMMAND BLINKING_OFF  = COMMAND( EFFECT::RESET_BLINKING );
@@ -45,8 +47,8 @@ namespace ANSI
             const inline COMMAND BOLD_ON       = COMMAND( EFFECT::BOLD );
             const inline COMMAND BOLD_OFF      = COMMAND( EFFECT::RESET_BOLD ); // Same thing as RESET_THIN
 
-            const inline COMMAND DIM_ON       = COMMAND( EFFECT::DIM );
-            const inline COMMAND DIM_OFF      = COMMAND( EFFECT::RESET_DIM ); // Same thing as RESET_BOLD
+            const inline COMMAND DIM_ON        = COMMAND( EFFECT::DIM );
+            const inline COMMAND DIM_OFF       = COMMAND( EFFECT::RESET_DIM ); // Same thing as RESET_BOLD
 
             const inline COMMAND ITALIC_ON     = COMMAND( EFFECT::ITALIC );
             const inline COMMAND ITALIC_OFF    = COMMAND( EFFECT::RESET_ITALIC );
@@ -66,8 +68,6 @@ namespace ANSI
             const inline COMMAND SUB_ON        = COMMAND( EFFECT::SUBSCRIPT );
             const inline COMMAND SUPER_ON      = COMMAND( EFFECT::SUPERSCRIPT );
             const inline COMMAND SCRIPTS_OFF   = COMMAND( EFFECT::RESET_SCRIPT );
-
-            const inline COMMAND& DEFAULT      = RESET;
         }
         // namespace EFFECTS
     }
@@ -75,7 +75,6 @@ namespace ANSI
 
     namespace BACKGROUND
     {
-        const inline COMMAND DEFAULT           = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::DEFAULT );
         const inline COMMAND BLACK             = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BLACK );
         const inline COMMAND RED               = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::RED );
         const inline COMMAND GREEN             = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::GREEN );
@@ -84,6 +83,7 @@ namespace ANSI
         const inline COMMAND MAGENTA           = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::MAGENTA );
         const inline COMMAND CYAN              = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::CYAN );
         const inline COMMAND WHITE             = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::WHITE );
+
         const inline COMMAND BRIGHT_BLACK      = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BRIGHT_BLACK );
         const inline COMMAND BRIGHT_RED        = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BRIGHT_RED );
         const inline COMMAND BRIGHT_GREEN      = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BRIGHT_GREEN );
@@ -93,6 +93,7 @@ namespace ANSI
         const inline COMMAND BRIGHT_CYAN       = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BRIGHT_CYAN );
         const inline COMMAND BRIGHT_WHITE      = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BRIGHT_WHITE );
         
+        const inline COMMAND DEFAULT           = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::DEFAULT );
         const inline COMMAND& RESET            = DEFAULT;
     }
     // namespace BACKGROUND

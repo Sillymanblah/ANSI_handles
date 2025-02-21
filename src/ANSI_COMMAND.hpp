@@ -7,6 +7,17 @@
 #include <stdexcept>
 #include <vector>
 
+#if defined(_WIN32) && defined(ANSI_DLL_EXPORT)
+#define ANSI_DLL_API __declspec(dllexport)
+#define ANSI_DLL_CALL __cdecl
+#elif defined(_WIN32) && defined(ANSI_DLL_IMPORT)
+#define ANSI_DLL_API __declspec(dllimport)
+#define ANSI_DLL_CALL __cdecl
+#else // !defined(_WIN32) || !defined(MEM_DLL_IMPORT) && !defined(MEM_DLL_EXPORT)
+#define ANSI_DLL_API
+#define ANSI_DLL_CALL
+#endif
+
 typedef unsigned char BYTE;
 
 namespace ANSI
@@ -187,9 +198,9 @@ namespace ANSI
         // The below section cannot be a namespace anymore because they are stored inside of a class.
         struct CODE
         {
-            static inline const char DELIMITER              = ';';
-            static inline const unsigned char RGB_FORMAT    = 2;
-            static inline const unsigned char BYTE_FORMAT   = 5;
+            static inline constexpr char DELIMITER              = ';';
+            static inline constexpr unsigned char RGB_FORMAT    = 2;
+            static inline constexpr unsigned char BYTE_FORMAT   = 5;
             
             enum BEGIN : char
             {
@@ -197,8 +208,9 @@ namespace ANSI
                 SEQUENCE_INTRO  = '[', // Control Sequence Introducer - almost always follows ESCAPE in ANSI codes.
                 CSI             = '\x9B', // Is considered to be able to do the job of both, but is not as consistent.
             };
+            // enum BEGIN
 
-            static inline const char BEGIN_CODE[2] = { (char)BEGIN::ESCAPE, (char)BEGIN::SEQUENCE_INTRO };
+            static inline constexpr char BEGIN_CODE[2] = { (char)BEGIN::ESCAPE, (char)BEGIN::SEQUENCE_INTRO };
             
             enum END : char
             {
@@ -218,25 +230,16 @@ namespace ANSI
                 GET_CURSOR_POS      = 'n',
                 KEY_STRING          = 'p',
             };
-            // static inline enum class CONTROL
+            // enum END
         };
         // struct CODE
 
-    private:
-        static std::string get_layer_code( LAYER layer );
-
-        static std::string get_base_code( LAYER layer );
-        static std::string get_base( LAYER layer );
-
-        static std::string get_default( LAYER layer );
-
-
     public:
         COMMAND() = delete;
-        COMMAND( EFFECT );
-        COMMAND( LAYER, BASIC_COLOR );
-        COMMAND( LAYER, BYTE_COLOR );
-        COMMAND( LAYER, RGB_COLOR );
+        ANSI_DLL_API ANSI_DLL_CALL COMMAND( EFFECT );
+        ANSI_DLL_API ANSI_DLL_CALL COMMAND( LAYER, BASIC_COLOR );
+        ANSI_DLL_API ANSI_DLL_CALL COMMAND( LAYER, BYTE_COLOR );
+        ANSI_DLL_API ANSI_DLL_CALL COMMAND( LAYER, RGB_COLOR );
         COMMAND( const COMMAND& ) = default;
         COMMAND( COMMAND&& ) = default;
 
@@ -257,13 +260,13 @@ namespace ANSI
         COMMANDS() : container() {}
         COMMANDS( COMMANDS&& __other ) : container( std::forward< COMMANDS >( __other ) ) {}
         COMMANDS( const COMMANDS& __other ) : container( __other ) {}
-        COMMANDS( container&& __commands ) : container( __commands ) {}
+        COMMANDS( container&& __commands ) : container( std::forward< container >( __commands ) ) {}
         COMMANDS( const container& __commands ) : container( __commands ) {}
-        COMMANDS( std::initializer_list< COMMAND >&& __command_list ) : container( __command_list ) {}
+        COMMANDS( std::initializer_list< COMMAND >&& __command_list ) : container( std::forward< std::initializer_list< COMMAND > >( __command_list ) ) {}
         COMMANDS( const std::initializer_list< COMMAND >& __command_list ) : container( __command_list ) {}
 
-        friend std::ostream& operator << ( std::ostream& output, const COMMANDS& commands );
-        friend std::ostream& operator << ( std::ostream& output, COMMANDS&& commands );
+        ANSI_DLL_API friend std::ostream& ANSI_DLL_CALL operator << ( std::ostream& output, const COMMANDS& commands );
+        ANSI_DLL_API friend std::ostream& ANSI_DLL_CALL operator << ( std::ostream& output, COMMANDS&& commands );
     };
     // class COMMANDS
 }
