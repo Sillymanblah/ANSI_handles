@@ -249,17 +249,18 @@ namespace ANSI
     };
     // class COMMAND
 
-    class COMMANDS : public std::initializer_list< COMMAND >
+    class COMMANDS : private std::vector< COMMAND >
     {
-    private:
-        using _MyStorage    = std::initializer_list< COMMAND >;
-
     public:
-        COMMANDS() : _MyStorage() {}
-        COMMANDS( COMMANDS&& __other ) : _MyStorage( std::forward< COMMANDS >( __other ) ) {}
-        COMMANDS( const COMMANDS& __other ) : _MyStorage( __other ) {}
-        COMMANDS( _MyStorage&& __command_list ) : _MyStorage( __command_list ) {}
-        COMMANDS( const _MyStorage& __command_list ) : _MyStorage( __command_list ) {}
+        using container    = std::vector< COMMAND >;
+
+        COMMANDS() : container() {}
+        COMMANDS( COMMANDS&& __other ) : container( std::forward< COMMANDS >( __other ) ) {}
+        COMMANDS( const COMMANDS& __other ) : container( __other ) {}
+        COMMANDS( container&& __commands ) : container( __commands ) {}
+        COMMANDS( const container& __commands ) : container( __commands ) {}
+        COMMANDS( std::initializer_list< COMMAND >&& __command_list ) : container( __command_list ) {}
+        COMMANDS( const std::initializer_list< COMMAND >& __command_list ) : container( __command_list ) {}
 
         friend std::ostream& operator << ( std::ostream& output, const COMMANDS& commands );
         friend std::ostream& operator << ( std::ostream& output, COMMANDS&& commands );
