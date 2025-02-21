@@ -1,0 +1,13 @@
+override MAJOR := 1
+export MAJOR
+override MINOR := 0
+export MINOR
+override PATCH := 0
+export PATCH
+override TEST := 0
+export TEST
+
+override VERSION := v$(MAJOR).$(MINOR).$(PATCH)
+export VERSION
+override TEST_VERSION := v$(MAJOR).$(MINOR).$(PATCH).$(TEST)
+export TEST_VERSION

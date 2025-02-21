@@ -1,0 +1,12 @@
+# Build directory
+bin
+
+# Dependency directory
+dependencies
+
+# IDEs
+.vscode
+.vs
+
+# Makefile settings
+settings.mk
