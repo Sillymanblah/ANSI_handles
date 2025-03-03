@@ -7,29 +7,10 @@
 #include <stdexcept>
 #include <vector>
 
-#if defined(_WIN32) && defined(ANSI_DLL_EXPORT)
-#define ANSI_DLL_API __declspec(dllexport)
-#define ANSI_DLL_CALL __cdecl
-#elif defined(_WIN32) && defined(ANSI_DLL_IMPORT)
-#define ANSI_DLL_API __declspec(dllimport)
-#define ANSI_DLL_CALL __cdecl
-#else // !defined(_WIN32) || !defined(MEM_DLL_IMPORT) && !defined(MEM_DLL_EXPORT)
-#define ANSI_DLL_API
-#define ANSI_DLL_CALL
-#endif
-
 typedef unsigned char BYTE;
 
 namespace ANSI
 {
-    enum class LAYER : BYTE
-    {
-        FOREGROUND  = 38,
-        BACKGROUND  = 48,
-        UNDERLINE   = 58, // Can not be used in conjuction with any BASIC_COLORs except DEFAULT
-    };
-    // enum class LAYER
-
     enum class EFFECT : BYTE
     {
         BOLD = 1,
@@ -41,6 +22,8 @@ namespace ANSI
         HIDDEN,
         STRIKETHROUGH,
         DOUBLE_UNDERLINE = 21,
+        FOREGROUND = 38,
+        BACKGROUND = 48,
         OVERLINE = 53,
         SUPERSCRIPT = 73,
         SUBSCRIPT = 74,
@@ -62,213 +45,100 @@ namespace ANSI
     };
     // enum class EFFECT
 
-    // For basic colors, these are stored as an offset integer from the forground/background color mode.
-    enum class BASIC_COLOR : int
+    enum class FUNCTION : char
     {
-        BLACK = -8,
-        RED,
-        GREEN,
-        YELLOW,
-        BLUE,
-        MAGENTA,
-        CYAN,
-        WHITE,
+        CURSOR_UP               = 'A',
+        CURSOR_DOWN             = 'B',
+        CURSOR_RIGHT            = 'C',
+        CURSOR_LEFT             = 'D',
+        CURSOR_DOWN_START       = 'E',
+        CURSOR_UP_START         = 'F',
+        CURSOR_SET_COLUMN       = 'G',
+        CURSOR_SET_POSITION     = 'H',
+        CURSOR_GET_POSITION     = 'n',
+        ERASE_SCREEN            = 'J',
+        ERASE_LINES             = 'K',
+        CURSOR_SAVE_POSITION    = '7',
+        CURSOR_RESTORE_POSITION = '8',
+        TEXT_EFFECT             = 'm',
+        SCREEN_SETTING          = 'h',
+        RESET_SCREEN            = 'l',
+        KEY_STRING              = 'p',
+    };
+    // enum class FUNCTION
+
+    struct COMMAND_BASE
+    {
+        static inline constexpr char DELIMITER      = ';';      // Delimiter for if commands have multiple parts.
+        static inline constexpr char ESCAPE_CHAR    = 27;       // Escape key to start a command or sequence.
+        static inline constexpr char SEQUENCE_INTRO = '[';      // Control Sequence Introducer - almost always follows ESCAPE in ANSI codes.
+        static inline constexpr char CSI            = '\x9B';   // Is considered to be able to do the job of both, but is not as consistent.
+
+        static inline constexpr char BEGIN_CODE[2] = { ESCAPE_CHAR, SEQUENCE_INTRO };
+    };
+    // struct COMMAND_BASE
+
+    // Command is the base for ANSI still, but should NOT be used by itself, as other functions have better type safety.
+    template < FUNCTION _Type, BYTE... _Data >
+    class COMMAND : protected COMMAND_BASE
+    {
+    public:
+        COMMAND() = default;
+        COMMAND( const COMMAND& ) = default; // There is not really a reason to use this constructor, since everything is compile-time constants now.
+        COMMAND( COMMAND&& ) = default; // There is not really a reason to use this constructor, since everything is compile-time constants now.
+        COMMAND& operator = ( const COMMAND& ) = default; // There is not really a reason to use this assignment operator, since everything is compile-time constants now.
+        COMMAND& operator = ( COMMAND&& ) = default; // There is not really a reason to use this assignment operator, since everything is compile-time constants now.
         
-        // We skip over the enumeration value of 0, because that code is not a color and is reserved for setting the color (using a byte or 3 byte RGB).
+        // Same command template args means same command.
+        bool operator == ( const COMMAND& )
+        { return true; }
+        bool operator == ( COMMAND&& )
+        { return true; }
+        bool operator != ( const COMMAND& )
+        { return false; }
+        bool operator != ( COMMAND&& )
+        { return false; }
+        
+        // Different command template args means different command.
+        template < FUNCTION _Type, BYTE... _Data >
+        bool operator == ( const COMMAND< _Type, _Data >& )
+        { return true; }
+        template < FUNCTION _Type, BYTE... _Data >
+        bool operator == ( COMMAND< _Type, _Data >&& )
+        { return true; }
+        template < FUNCTION _Type, BYTE... _Data >
+        bool operator != ( const COMMAND< _Type, _Data >& )
+        { return true; }
+        template < FUNCTION _Type, BYTE... _Data >
+        bool operator != ( COMMAND< _Type, _Data >&& )
+        { return true; }
 
-        DEFAULT = 1, // Default color is a reset of color to whatever the terminal default is.
+    protected:
+        template < FUNCTION _Type, BYTE... _Data >
+        static void print_data( std::ostream& output, const COMMAND ) {} // Do nothing, no data to print...
 
-        // Furthermore, there are bright versions of all the basic colors found further down below:
-
-        BRIGHT_BLACK = 52,
-        BRIGHT_RED,
-        BRIGHT_GREEN,
-        BRIGHT_YELLOW,
-        BRIGHT_BLUE,
-        BRIGHT_MAGENTA,
-        BRIGHT_CYAN,
-        BRIGHT_WHITE,
-    };
-    // enum class BASIC_COLOR
-
-    class BYTE_COLOR
-    {
-    public:
-        enum BASIC : BYTE
+        template < FUNCTION _Type, BYTE _First, BYTE... _Rest >
+        static void print_data( std::ostream& output, const COMMAND ) // One part of data to print, print it...
+        { output << (int)_First; }
+        template < FUNCTION _Type, BYTE _First, BYTE _Second, BYTE... _Rest >
+        static void print_data( std::ostream& output, const COMMAND ) // Multiple parts of data, print the first with a delimiter and recurse.
         {
-            OFF_BLACK,
-            RED,
-            GREEN,
-            YELLOW,
-            BLUE,
-            MAGENTA,
-            CYAN,
-            OFF_WHITE,
-            BRIGHT_BLACK,
-            BRIGHT_RED,
-            BRIGHT_GREEN,
-            BRIGHT_YELLOW,
-            BRIGHT_BLUE,
-            BRIGHT_MAGENTA,
-            BRIGHT_CYAN,
-            BRIGHT_WHITE,
-        };
-        // enum BASIC
+            output << (int)_First << COMMAND::DELIMITER;
+            print_data( output, COMMAND< _Type, _Second, _Rest... >() );
+        }
 
-        enum GRAYSCALE : BYTE
+    public:
+        // Base case, no data to print.
+        template < FUNCTION _Type, BYTE... _Data >
+        virtual inline friend std::ostream& operator << ( std::ostream& output, const COMMAND< _Type, _Data... > )
         {
-            BLACK = 232,
-            LIGHT_BLACK,
-            LIGHTER_BLACK,
-            LIGHTEST_BLACK,
-            DARKEST_DARK_GRAY,
-            DARKER_DARK_GRAY,
-            DARK_GRAY,
-            LIGHTER_DARK_GRAY,
-            LIGHTEST_DARK_GRAY,
-            DARKEST_GRAY,
-            DARKER_GRAY,
-            GRAY,
-            LIGHTER_GRAY,
-            LIGHTEST_GRAY,
-            DARKEST_LIGHT_GRAY,
-            DARKER_LIGHT_GRAY,
-            LIGHT_GRAY,
-            LIGHTER_LIGHT_GRAY,
-            LIGHTEST_LIGHT_GRAY,
-            DARKEST_WHITE,
-            DARKER_WHITE,
-            DARK_WHITE,
-            WHITE,
-            BRILLIANT_WHITE, // Needed one more name...
-        };
-        // enum GRAYSCALE
-
-    public:
-        BYTE_COLOR( BYTE __value ) : _code(__value) {}
-        BYTE_COLOR( BYTE_COLOR&& ) = default;
-        BYTE_COLOR( const BYTE_COLOR& ) = default;
-
-    private:
-        // enumeration for use in the RGB code function.
-        enum RGB : BYTE
-        {
-            TRUE_BLACK      = 16, // The starting point for the RGB increment section of the colors
-
-            BLUE_INC        = 1, // Incremental steps for blue.
-            GREEN_INC       = 6, // Incremental steps for green.
-            RED_INC         = 36, // Incremental steps for red.
-        };
-        // enum RGB
-
-    public:
-        /// @brief Function takes a set of values for an RGB code to retrieve a code for the value.
-        /// @param __red    A byte value for the desired saturation of the red color, will be condensed down to the range 0-5.
-        /// @param __green  A byte value for the desired saturation of the green color, will be condensed down to the range 0-5.
-        /// @param __blue   A byte value for the desired saturation of the blue color, will be condensed down to the range 0-5.
-        /// @return A @c BYTE value to the desired code for the given RGB value.
-        static inline BYTE rgb_code( BYTE __red, BYTE __green, BYTE __blue );
-
-    private:
-        BYTE _code;
-
-        friend class COMMAND;
-    };
-    // class BYTE_COLOR
-    
-    class RGB_COLOR
-    {
-    public:
-        RGB_COLOR( BYTE __red, BYTE __green, BYTE __blue ) : _red(__red), _green(__green), _blue(__blue) {}
-        RGB_COLOR( RGB_COLOR&& ) = default;
-        RGB_COLOR( const RGB_COLOR& ) = default;
-
-    private:
-        BYTE _red;
-        BYTE _green;
-        BYTE _blue;
-
-        friend class COMMAND;
-    };
-    // class RGB_COLOR
-
-    class COMMAND
-    {
-    private:
-        // The below section cannot be a namespace anymore because they are stored inside of a class.
-        struct CODE
-        {
-            static inline constexpr char DELIMITER              = ';';
-            static inline constexpr unsigned char RGB_FORMAT    = 2;
-            static inline constexpr unsigned char BYTE_FORMAT   = 5;
-            
-            enum BEGIN : char
-            {
-                ESCAPE          = 27, // Escape key to start a command or sequence.
-                SEQUENCE_INTRO  = '[', // Control Sequence Introducer - almost always follows ESCAPE in ANSI codes.
-                CSI             = '\x9B', // Is considered to be able to do the job of both, but is not as consistent.
-            };
-            // enum BEGIN
-
-            static inline constexpr char BEGIN_CODE[2] = { (char)BEGIN::ESCAPE, (char)BEGIN::SEQUENCE_INTRO };
-            
-            enum END : char
-            {
-                CURSOR_UP           = 'A',
-                CURSOR_DOWN         = 'B',
-                CURSOR_RIGHT        = 'C',
-                CURSOR_LEFT         = 'D',
-                CURSOR_START_DOWN   = 'E',
-                CURSOR_START_UP     = 'F',
-                CURSOR_TO_COLUMN    = 'G',
-                CURSOR_TO_POS       = 'H',
-                SCREEN_ERASE        = 'J',
-                LINE_ERASE          = 'K',
-                TEXT                = 'm',
-                SET_MODE            = 'h',
-                UNSET_MODE          = 'l',
-                GET_CURSOR_POS      = 'n',
-                KEY_STRING          = 'p',
-            };
-            // enum END
-        };
-        // struct CODE
-
-    public:
-        COMMAND() = delete;
-        ANSI_DLL_API ANSI_DLL_CALL COMMAND( EFFECT );
-        ANSI_DLL_API ANSI_DLL_CALL COMMAND( LAYER, BASIC_COLOR );
-        ANSI_DLL_API ANSI_DLL_CALL COMMAND( LAYER, BYTE_COLOR );
-        ANSI_DLL_API ANSI_DLL_CALL COMMAND( LAYER, RGB_COLOR );
-        COMMAND( const COMMAND& ) = default;
-        COMMAND( COMMAND&& ) = default;
-
-        friend std::ostream& operator << ( std::ostream& output, const COMMAND& command );
-        friend std::ostream& operator << ( std::ostream& output, COMMAND&& command );
-
-    private:
-        std::vector< BYTE > codes;
-        CODE::END closing_tag;
+            output << COMMAND::BEGIN_CODE;
+            COMMAND::print_data( output, COMMAND< _Types, _Data... >() );
+            output << _Type;
+            return output;
+        }
     };
     // class COMMAND
-
-    class COMMANDS : private std::vector< COMMAND >
-    {
-    public:
-        using container    = std::vector< COMMAND >;
-
-        COMMANDS() : container() {}
-        COMMANDS( COMMANDS&& __other ) : container( std::forward< COMMANDS >( __other ) ) {}
-        COMMANDS( const COMMANDS& __other ) : container( __other ) {}
-        COMMANDS( container&& __commands ) : container( std::forward< container >( __commands ) ) {}
-        COMMANDS( const container& __commands ) : container( __commands ) {}
-        COMMANDS( std::initializer_list< COMMAND >&& __command_list ) : container( std::forward< std::initializer_list< COMMAND > >( __command_list ) ) {}
-        COMMANDS( const std::initializer_list< COMMAND >& __command_list ) : container( __command_list ) {}
-
-        ANSI_DLL_API friend std::ostream& ANSI_DLL_CALL operator << ( std::ostream& output, const COMMANDS& commands );
-        ANSI_DLL_API friend std::ostream& ANSI_DLL_CALL operator << ( std::ostream& output, COMMANDS&& commands );
-    };
-    // class COMMANDS
 }
 // namespace ANSI
 
