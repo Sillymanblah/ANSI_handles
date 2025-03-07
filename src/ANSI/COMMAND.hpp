@@ -1,9 +1,9 @@
 #pragma once
-#ifndef ANSI_COMMAND_HPP
-#define ANSI_COMMAND_HPP
+#ifndef COMMAND_HPP
+#define COMMAND_HPP
 
 #include <ostream>
-#include "numeric_string.hpp"
+#include "../numeric_string.hpp"
 
 typedef unsigned char BYTE;
 
@@ -150,4 +150,4 @@ namespace ANSI
 }
 // namespace ANSI
 
-#endif // ANSI_COLORS_HPP
+#endif // COMMAND_HPP

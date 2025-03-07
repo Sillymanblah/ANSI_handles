@@ -2,7 +2,7 @@
 #ifndef ANSI_HPP
 #define ANSI_HPP
 
-#include "ANSI_COMMAND.hpp"
+#include "COMMAND.hpp"
 
 namespace ANSI
 {
