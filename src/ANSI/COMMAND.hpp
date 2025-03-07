@@ -72,7 +72,7 @@ namespace ANSI
         static constexpr typename command_string_t< _Tag, _Data... >::value_type command_string_v = command_string< _Tag, _Data... >::value; 
 
     public:
-        constexpr inline const char* cstr() const
+        static inline constexpr const char* cstr()
         { return "invalid use of COMMAND_BASE::cstr()"; };
         inline friend std::ostream& operator << ( std::ostream& output, const COMMAND_BASE command )
         { return ( output << command.cstr() ); }
@@ -105,7 +105,7 @@ namespace ANSI
         { return false; }
 
     public:
-        constexpr inline const char* cstr() const
+        static inline constexpr const char* cstr() const
         { return command_string_v< _Type, _Data... >; }
 
         inline friend std::ostream& operator << ( std::ostream& output, const COMMAND command )
