@@ -110,8 +110,33 @@ namespace ANSI
 
         inline friend std::ostream& operator << ( std::ostream& output, const COMMAND command )
         { return ( output << command.cstr() ); }
+    
+        // Combining commands of the same function type with the addition operator.
+        template < BYTE... _Other_data >
+        constexpr inline COMMAND< _Type, _Data..., _Other_data... > operator + ( const COMMAND< _Type, _Other_data... > ) const
+        { return COMMAND< _Type, _Data..., _Other_data... >(); }
     };
     // class COMMAND
+
+    // Merges multiple commands if they have the same function type. (another version of operator +, but for types instead of objects)
+    template < class... _Commands >
+    struct merge {};
+    
+    // Recursively merge the first two commands.
+    template < FUNCTION _Type, BYTE... _Data_1, BYTE... _Data_2, class... _Rest >
+    struct merge< COMMAND< _Type, _Data_1... >, COMMAND< _Type, _Data_2... >, _Rest... > : merge< COMMAND< _Type, _Data_1..., _Data_2... >, _Rest... >
+    { using type = merge< COMMAND< _Type, _Data_1..., _Data_2... >, _Rest... >::type; };
+
+    // If there are only two commands left, capture them alone.
+    template < FUNCTION _Type, BYTE... _Data_1, BYTE... _Data_2 >
+    struct merge< COMMAND< _Type, _Data_1... >, COMMAND< _Type, _Data_2... > > : COMMAND< _Type, _Data_1..., _Data_2... >
+    { using type = COMMAND< _Type, _Data_1..., _Data_2... >; };
+
+    template < class... _Commands >
+    using merge_t = typename merge< _Commands... >::type;
+    
+    template < class... _Commands >
+    constexpr merge_t< _Commands... > merge_v = merge_t< _Commands... >();
 
 }
 // namespace ANSI
