@@ -113,40 +113,6 @@ namespace ANSI
     };
     // class COMMAND
 
-    enum EFFECT : BYTE
-    {
-        BOLD = 1,
-        DIM,
-        ITALIC,
-        UNDERLINE,
-        BLINKING,
-        INVERSE,
-        HIDDEN,
-        STRIKETHROUGH,
-        DOUBLE_UNDERLINE = 21,
-        FOREGROUND = 38,
-        BACKGROUND = 48,
-        OVERLINE = 53,
-        SUPERSCRIPT = 73,
-        SUBSCRIPT = 74,
-        
-        RESET_ALL = 0,
-        RESET_BOLD = 22, // Resetting bold or dim colors is the same code, so they are both set to 22.
-        RESET_DIM = 22, // Resetting bold or dim colors is the same code, so they are both set to 22.
-        RESET_ITALIC,
-        RESET_UNDERLINE, // Turns off underlines, including single and double, plus any colored underlines
-        RESET_BLINKING,
-        RESET_INVERSE,
-        RESET_HIDDEN,
-        RESET_STRIKETHROUGH,
-        RESET_OVERLINE = 55,
-        RESET_SCRIPT = 75, // Turns off subscript AND superscript
-
-        FRAME_OPEN = 51,
-        FRAME_CLOSE = 54,
-    };
-    // enum EFFECT
-
 }
 // namespace ANSI
 
