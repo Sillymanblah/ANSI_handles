@@ -2,6 +2,7 @@
 #ifndef META_STRING_HPP
 #define META_STRING_HPP
 
+#include <cstddef>
 #include <utility>
 
 namespace meta
