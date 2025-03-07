@@ -8,102 +8,99 @@ namespace ANSI
 {
     namespace TEXT
     {
-        const inline COMMAND DEFAULT           = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::DEFAULT );
-        const inline COMMAND& RESET            = DEFAULT;
+        constexpr inline auto DEFAULT           = COMMAND< FUNCTION::TEXT_EFFECT >();
+        constexpr inline auto RESET             = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::RESET_ALL >();
 
-        const inline COMMAND BLACK             = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BLACK );
-        const inline COMMAND RED               = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::RED );
-        const inline COMMAND GREEN             = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::GREEN );
-        const inline COMMAND BLUE              = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BLUE );
-        const inline COMMAND YELLOW            = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::YELLOW );
-        const inline COMMAND MAGENTA           = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::MAGENTA );
-        const inline COMMAND CYAN              = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::CYAN );
-        const inline COMMAND WHITE             = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::WHITE );
+        namespace FOREGROUND
+        {
+            constexpr inline auto DEFAULT           = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND + 1 >();
 
-        const inline COMMAND BRIGHT_BLACK      = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BRIGHT_BLACK );
-        const inline COMMAND BRIGHT_RED        = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BRIGHT_RED );
-        const inline COMMAND BRIGHT_GREEN      = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BRIGHT_GREEN );
-        const inline COMMAND BRIGHT_BLUE       = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BRIGHT_BLUE );
-        const inline COMMAND BRIGHT_YELLOW     = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BRIGHT_YELLOW );
-        const inline COMMAND BRIGHT_MAGENTA    = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BRIGHT_MAGENTA );
-        const inline COMMAND BRIGHT_CYAN       = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BRIGHT_CYAN );
-        const inline COMMAND BRIGHT_WHITE      = COMMAND( LAYER::FOREGROUND, BASIC_COLOR::BRIGHT_WHITE );
-        
+            constexpr inline auto BLACK             = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 8 >();
+            constexpr inline auto RED               = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 7 >();
+            constexpr inline auto GREEN             = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 6 >();
+            constexpr inline auto BLUE              = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 4 >();
+            constexpr inline auto YELLOW            = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 5 >();
+            constexpr inline auto MAGENTA           = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 3 >();
+            constexpr inline auto CYAN              = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 2 >();
+            constexpr inline auto WHITE             = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 1 >();
+    
+            // NOTE: Bright colors can also usually be achieved via layering BOLD with the text color.
+            constexpr inline auto BRIGHT_BLACK      = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 8 + 60 >();
+            constexpr inline auto BRIGHT_RED        = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 7 + 60 >();
+            constexpr inline auto BRIGHT_GREEN      = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 6 + 60 >();
+            constexpr inline auto BRIGHT_BLUE       = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 4 + 60 >();
+            constexpr inline auto BRIGHT_YELLOW     = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 5 + 60 >();
+            constexpr inline auto BRIGHT_MAGENTA    = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 3 + 60 >();
+            constexpr inline auto BRIGHT_CYAN       = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 2 + 60 >();
+            constexpr inline auto BRIGHT_WHITE      = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FOREGROUND - 1 + 60 >();
+        }
+        // namespace FOREGROUND
+
         namespace EFFECTS
         {
-            const inline COMMAND& DEFAULT      = RESET;
-            const inline COMMAND RESET         = COMMAND( EFFECT::RESET_ALL );
-
-            const inline COMMAND UNDERLINE_ON  = COMMAND( EFFECT::UNDERLINE );
-            const inline COMMAND UNDERLINE_X2  = COMMAND( EFFECT::DOUBLE_UNDERLINE );
-            const inline COMMAND UNDERLINE_OFF = COMMAND( EFFECT::RESET_UNDERLINE );
+            constexpr inline auto UNDERLINE_ON      = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::UNDERLINE >();
+            constexpr inline auto UNDERLINE_X2      = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::DOUBLE_UNDERLINE >();
+            constexpr inline auto UNDERLINE_OFF     = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::RESET_UNDERLINE >();
             
-            const inline COMMAND OVERLINE_ON   = COMMAND( EFFECT::OVERLINE );
-            const inline COMMAND OVERLINE_OFF  = COMMAND( EFFECT::RESET_OVERLINE );
+            constexpr inline auto OVERLINE_ON       = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::OVERLINE >();
+            constexpr inline auto OVERLINE_OFF      = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::RESET_OVERLINE >();
 
-            const inline COMMAND BLINKING_ON   = COMMAND( EFFECT::BLINKING );
-            const inline COMMAND BLINKING_OFF  = COMMAND( EFFECT::RESET_BLINKING );
+            constexpr inline auto BLINKING_ON       = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BLINKING >();
+            constexpr inline auto BLINKING_OFF      = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::RESET_BLINKING >();
 
-            const inline COMMAND BOLD_ON       = COMMAND( EFFECT::BOLD );
-            const inline COMMAND BOLD_OFF      = COMMAND( EFFECT::RESET_BOLD ); // Same thing as RESET_THIN
+            constexpr inline auto BOLD_ON           = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BOLD >();
+            constexpr inline auto BOLD_OFF          = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::RESET_BOLD >();
 
-            const inline COMMAND DIM_ON        = COMMAND( EFFECT::DIM );
-            const inline COMMAND DIM_OFF       = COMMAND( EFFECT::RESET_DIM ); // Same thing as RESET_BOLD
+            constexpr inline auto DIM_ON            = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::DIM >();
+            constexpr inline auto DIM_OFF           = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::RESET_DIM >();
 
-            const inline COMMAND ITALIC_ON     = COMMAND( EFFECT::ITALIC );
-            const inline COMMAND ITALIC_OFF    = COMMAND( EFFECT::RESET_ITALIC );
+            constexpr inline auto ITALIC_ON         = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::ITALIC >();
+            constexpr inline auto ITALIC_OFF        = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::RESET_ITALIC >();
 
-            const inline COMMAND OPEN_FRAME    = COMMAND( EFFECT::FRAME_OPEN );
-            const inline COMMAND CLOSE_FRAME   = COMMAND( EFFECT::FRAME_CLOSE );
+            constexpr inline auto OPEN_FRAME        = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FRAME_OPEN >();
+            constexpr inline auto CLOSE_FRAME       = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::FRAME_CLOSE >();
 
-            const inline COMMAND HIDE          = COMMAND( EFFECT::HIDDEN );
-            const inline COMMAND UNHIDE        = COMMAND( EFFECT::RESET_HIDDEN );
+            constexpr inline auto HIDE              = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::HIDDEN >();
+            constexpr inline auto UNHIDE            = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::RESET_HIDDEN >();
             
-            const inline COMMAND INVERT_ON     = COMMAND( EFFECT::INVERSE );
-            const inline COMMAND INVERT_OFF    = COMMAND( EFFECT::RESET_INVERSE );
+            constexpr inline auto INVERT_ON         = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::INVERSE >();
+            constexpr inline auto INVERT_OFF        = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::RESET_INVERSE >();
             
-            const inline COMMAND STRIKE_ON     = COMMAND( EFFECT::STRIKETHROUGH );
-            const inline COMMAND STRIKE_OFF    = COMMAND( EFFECT::RESET_STRIKETHROUGH );
+            constexpr inline auto STRIKE_ON         = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::STRIKETHROUGH >();
+            constexpr inline auto STRIKE_OFF        = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::RESET_STRIKETHROUGH >();
             
-            const inline COMMAND SUB_ON        = COMMAND( EFFECT::SUBSCRIPT );
-            const inline COMMAND SUPER_ON      = COMMAND( EFFECT::SUPERSCRIPT );
-            const inline COMMAND SCRIPTS_OFF   = COMMAND( EFFECT::RESET_SCRIPT );
+            constexpr inline auto SUB_ON            = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::SUBSCRIPT >();
+            constexpr inline auto SUPER_ON          = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::SUPERSCRIPT >();
+            constexpr inline auto SCRIPTS_OFF       = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::RESET_SCRIPT >();
         }
         // namespace EFFECTS
+
+        namespace BACKGROUND
+        {
+            constexpr inline auto DEFAULT           = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND + 1 >();
+
+            constexpr inline auto BLACK             = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 8 >();
+            constexpr inline auto RED               = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 7 >();
+            constexpr inline auto GREEN             = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 6 >();
+            constexpr inline auto BLUE              = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 4 >();
+            constexpr inline auto YELLOW            = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 5 >();
+            constexpr inline auto MAGENTA           = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 3 >();
+            constexpr inline auto CYAN              = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 2 >();
+            constexpr inline auto WHITE             = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 1 >();
+
+            // NOTE: Bright colors can also usually be achieved via layering BOLD with the text color.
+            constexpr inline auto BRIGHT_BLACK      = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 8 + 60 >();
+            constexpr inline auto BRIGHT_RED        = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 7 + 60 >();
+            constexpr inline auto BRIGHT_GREEN      = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 6 + 60 >();
+            constexpr inline auto BRIGHT_BLUE       = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 4 + 60 >();
+            constexpr inline auto BRIGHT_YELLOW     = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 5 + 60 >();
+            constexpr inline auto BRIGHT_MAGENTA    = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 3 + 60 >();
+            constexpr inline auto BRIGHT_CYAN       = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 2 + 60 >();
+            constexpr inline auto BRIGHT_WHITE      = COMMAND< FUNCTION::TEXT_EFFECT, EFFECT::BACKGROUND - 1 + 60 >();
+        }
+        // namespace BACKGROUND
     }
     // namespace TEXT
-
-    namespace BACKGROUND
-    {
-        const inline COMMAND BLACK             = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BLACK );
-        const inline COMMAND RED               = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::RED );
-        const inline COMMAND GREEN             = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::GREEN );
-        const inline COMMAND BLUE              = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BLUE );
-        const inline COMMAND YELLOW            = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::YELLOW );
-        const inline COMMAND MAGENTA           = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::MAGENTA );
-        const inline COMMAND CYAN              = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::CYAN );
-        const inline COMMAND WHITE             = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::WHITE );
-
-        const inline COMMAND BRIGHT_BLACK      = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BRIGHT_BLACK );
-        const inline COMMAND BRIGHT_RED        = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BRIGHT_RED );
-        const inline COMMAND BRIGHT_GREEN      = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BRIGHT_GREEN );
-        const inline COMMAND BRIGHT_BLUE       = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BRIGHT_BLUE );
-        const inline COMMAND BRIGHT_YELLOW     = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BRIGHT_YELLOW );
-        const inline COMMAND BRIGHT_MAGENTA    = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BRIGHT_MAGENTA );
-        const inline COMMAND BRIGHT_CYAN       = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BRIGHT_CYAN );
-        const inline COMMAND BRIGHT_WHITE      = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::BRIGHT_WHITE );
-        
-        const inline COMMAND DEFAULT           = COMMAND( LAYER::BACKGROUND, BASIC_COLOR::DEFAULT );
-        const inline COMMAND& RESET            = DEFAULT;
-    }
-    // namespace BACKGROUND
-
-    /// @deprecated Instead use either @c ANSI::DEFAULT or @c ANSI::RESET.
-    const inline std::ostream& FULL_RESET( std::ostream& output )
-    { return output << TEXT::RESET << TEXT::EFFECTS::RESET << BACKGROUND::RESET; }
-
-    const inline COMMANDS DEFAULT  = { TEXT::DEFAULT, TEXT::EFFECTS::DEFAULT, BACKGROUND::DEFAULT };
-    const inline COMMANDS& RESET   = DEFAULT;
 }
 // namespace ANSI
 
