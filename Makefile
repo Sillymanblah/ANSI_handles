@@ -100,7 +100,7 @@ override ARCHIVES	   := $(foreach library,$(ARCHIVE_VARS),-L"$(library)")
     # Libraries for the program
 LIBRARY_VARS		   := $(call update_any,$(IMPORT_LIBS),lib/lib%.lai=% lib/lib%.la=% lib/lib%.a=% lib/%.lib=%)
     # External libraries we need
-LIBRARY_VARS		   += Ws2_32
+LIBRARY_VARS		   +=
 override LIBRARIES	   := $(foreach archive,$(LIBRARY_VARS),-l"$(archive)")
     # Defined variables for the program, NOTE: we NEED to tell GLFW to not dynamically load Vulkan at runtime.
 DEFINE_VARS			   :=
