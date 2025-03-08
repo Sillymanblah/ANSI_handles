@@ -25,19 +25,19 @@ namespace meta
 
 	template < size_t _Index, class _Char, const _Char* _Cstr, _Char... _Elems >
 	struct string_builder : std::conditional_t< _Cstr[ _Index ] != 0, string_builder< _Index + 1, _Char, _Cstr, _Elems..., _Cstr[ _Index ] >, string< _Char, _Elems... > >
-	{ using type = std::conditional_t< _Cstr[ _Index ] != 0, string_builder< _Index + 1, _Char, _Cstr, _Elems..., _Cstr[ _Index ] >, string< _Char, _Elems... > >::type; };
+	{ using type = typename std::conditional_t< _Cstr[ _Index ] != 0, string_builder< _Index + 1, _Char, _Cstr, _Elems..., _Cstr[ _Index ] >, string< _Char, _Elems... > >::type; };
 	
 	template < class _Char, const _Char* _Cstr, typename >
 	struct build_string {};
 
 	template < class _Char, const _Char* _Cstr, size_t... _Indices >
 	struct build_string< _Char, _Cstr, std::index_sequence< _Indices... > > : string< _Char, _Cstr[ _Indices ]... >
-	{ using type = string< _Char, _Cstr[ _Indices ]... >::type; };
+	{ using type = typename string< _Char, _Cstr[ _Indices ]... >::type; };
 
 	// Conditionally builds a string using either string_builder if we don't know the size, or std::index_sequence if we do.
 	template < class _Char, const _Char* _Cstr, size_t _Size = 0 >
 	struct make_string : std::conditional_t< _Size == 0, string_builder< 0, _Char, _Cstr >, build_string< _Char, _Cstr, std::make_index_sequence< _Size > > >
-	{ using type = std::conditional_t< _Size == 0, string_builder< 0, _Char, _Cstr >, build_string< _Char, _Cstr, std::make_index_sequence< _Size > > >::type; };
+	{ using type = typename std::conditional_t< _Size == 0, string_builder< 0, _Char, _Cstr >, build_string< _Char, _Cstr, std::make_index_sequence< _Size > > >::type; };
 	
 	template < class _Char, const _Char* _Cstr, size_t _Size = 0 >
 	using make_string_t = typename make_string< _Char, _Cstr, _Size >::type;
@@ -67,20 +67,20 @@ namespace meta
 
 	template < class _First, class _Second >
 	struct string_concat_many< _First, _Second > : string_concat_t< _First, _Second >
-	{ using type = string_concat_t< _First, _Second >; };
+	{ using type = typename string_concat_t< _First, _Second >::type; };
 
 	template < class... _Strings >
 	using string_concat_many_t = typename string_concat_many< _Strings... >::type;
 
 	template < class... _Strings >
-	constexpr string_concat_many_t< _Strings... >::value_type string_concat_many_v = string_concat_many< _Strings... >::value;
+	constexpr typename string_concat_many_t< _Strings... >::value_type string_concat_many_v = string_concat_many< _Strings... >::value;
 
 	template < class _Char, const _Char* _String_1, const _Char* _String_2 >
 	struct cstring_concat : string_concat< make_string_t< _Char, _String_1 >, make_string_t< _Char, _String_2 > >
-	{ using type = string_concat< make_string_t< _Char, _String_1 >, make_string_t< _Char, _String_2 > >::type; };
+	{ using type = typename string_concat< make_string_t< _Char, _String_1 >, make_string_t< _Char, _String_2 > >::type; };
 
 	template < class _Char, const _Char* _String_1, const _Char* _String_2 >
-	using cstring_concat_t = cstring_concat< _Char, _String_1, _String_2 >::type;
+	using cstring_concat_t = typename cstring_concat< _Char, _String_1, _String_2 >::type;
 	
 	template < class _Char, const _Char* _String_1, const _Char* _String_2 >
 	constexpr typename cstring_concat_t< _Char, _String_1, _String_2 >::value_type cstring_concat_v = cstring_concat< _Char, _String_1, _String_2 >::value;
@@ -96,7 +96,7 @@ namespace meta
 	using append_t = typename append< _Char, _String, _Elems... >::type;
 
 	template < class _Char, class _String, _Char... _Elems >
-	constexpr append_t< _Char, _String, _Elems... >::value_type append_v = append< _Char, _String, _Elems... >::value;
+	constexpr typename append_t< _Char, _String, _Elems... >::value_type append_v = append< _Char, _String, _Elems... >::value;
 }
 // namespace meta
 

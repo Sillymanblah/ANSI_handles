@@ -96,7 +96,7 @@ namespace meta
 	
 	template < class _Ty, _Ty _Value, _Ty _Base, class _Char, _Char... _Elems >
 	struct numeric_string_finisher< false, _Ty, _Value, _Base, _Char, _Elems... > : string< _Char, '0' + _Value, _Elems... >
-	{ using type = string< _Char, '0' + _Value, _Elems... >::type; };
+	{ using type = typename string< _Char, '0' + _Value, _Elems... >::type; };
 
 	template < size_t _Digits, class _Ty, _Ty _Value, _Ty _Base, class _Char, _Char... _Elems >
 	struct numeric_string_builder :
@@ -109,14 +109,14 @@ namespace meta
 
 	template < class _Ty, _Ty _Value, _Ty _Base = 10, class _Char = char >
 	struct numeric_string : numeric_string_builder< digits< _Ty, _Base >( abs< _Ty >( _Value ) ), _Ty, _Value, _Base, _Char >
-	{ using type = numeric_string_builder< digits< _Ty, _Base >( abs< _Ty >( _Value ) ), _Ty, _Value, _Base, _Char >::type; };
+	{ using type = typename numeric_string_builder< digits< _Ty, _Base >( abs< _Ty >( _Value ) ), _Ty, _Value, _Base, _Char >::type; };
 
 	// Gets the base type (the meta::string) from the call to numeric_string.
 	template < class _Ty, _Ty _Value, _Ty _Base = 10, class _Char = char >
-	using numeric_string_t = numeric_string< _Ty, _Value, _Base, _Char >::type;
+	using numeric_string_t = typename numeric_string< _Ty, _Value, _Base, _Char >::type;
 
 	template < class _Ty, _Ty _Value, _Ty _Base = 10, class _Char = char >
-	constexpr numeric_string_t< _Ty, _Value, _Base, _Char>::value_type numeric_string_v = numeric_string< _Ty, _Value, _Base, _Char >::value;
+	constexpr typename numeric_string_t< _Ty, _Value, _Base, _Char>::value_type numeric_string_v = numeric_string< _Ty, _Value, _Base, _Char >::value;
 }
 // namespace meta
 
