@@ -105,7 +105,7 @@ namespace ANSI
         { return false; }
 
     public:
-        static inline constexpr const char* cstr() const
+        static inline constexpr const char* cstr()
         { return command_string_v< _Type, _Data... >; }
 
         inline friend std::ostream& operator << ( std::ostream& output, const COMMAND command )
