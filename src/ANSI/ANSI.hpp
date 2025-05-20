@@ -141,6 +141,70 @@ namespace ANSI
         // namespace BACKGROUND
     }
     // namespace TEXT
+
+    namespace ERASE
+    {
+        namespace SCREEN
+        {
+            template < BYTE _Value >
+            using COMMAND = ::ANSI::COMMAND< FUNCTION::ERASE_SCREEN, _Value >;
+
+            constexpr inline COMMAND< 0 > CURSOR_TO_END;
+            constexpr inline COMMAND< 1 > CURSOR_TO_BEGIN;
+            constexpr inline COMMAND< 2 > CLEAR_SCREEN;
+            constexpr inline COMMAND< 3 > SAVED_LINES;
+        }
+        // namespace SCREEN
+
+        namespace LINE
+        {
+            template < BYTE _Value >
+            using COMMAND = ::ANSI::COMMAND< FUNCTION::ERASE_LINES, _Value >;
+    
+            constexpr inline COMMAND< 0 > CURSOR_TO_END;
+            constexpr inline COMMAND< 1 > CURSOR_TO_BEGIN;
+            constexpr inline COMMAND< 2 > DELETE_LINE;
+        }
+        // namespace LINE
+    }
+    // namespace ERASE
+
+    namespace CURSOR_POSITION
+    {
+        using HOME = ::ANSI::COMMAND< FUNCTION::CURSOR_SET_POSITION >;
+
+        template < BYTE _Line, BYTE _Column >
+        using SET = ::ANSI::COMMAND< FUNCTION::CURSOR_SET_POSITION, _Line, _Column >;
+
+        template < BYTE _Column >
+        using SET_COLUMN = ::ANSI::COMMAND< FUNCTION::CURSOR_SET_COLUMN, _Column >;
+
+        template < BYTE _Distance >
+        using UP = ::ANSI::COMMAND< FUNCTION::CURSOR_UP, _Distance >;
+
+        template < BYTE _Distance >
+        using UP_RESET = ::ANSI::COMMAND< FUNCTION::CURSOR_UP_START, _Distance >;
+
+        template < BYTE _Distance >
+        using DOWN = ::ANSI::COMMAND< FUNCTION::CURSOR_DOWN, _Distance >;
+
+        template < BYTE _Distance >
+        using DOWN_RESET = ::ANSI::COMMAND< FUNCTION::CURSOR_DOWN_START, _Distance >;
+
+        template < BYTE _Distance >
+        using LEFT = ::ANSI::COMMAND< FUNCTION::CURSOR_LEFT, _Distance >;
+
+        template < BYTE _Distance >
+        using RIGHT = ::ANSI::COMMAND< FUNCTION::CURSOR_RIGHT, _Distance >;
+
+        // Saves a position to restore to with `ANSI::CURSOR_POSITION::RESTORE`.
+        using SAVE = ::ANSI::COMMAND< FUNCTION::CURSOR_SAVE_POSITION >;
+        
+        // Restores the last saved position by `ANSI::CURSOR_POSITION::SAVE`.
+        using RESTORE = ::ANSI::COMMAND< FUNCTION::CURSOR_RESTORE_POSITION >;
+    }
+    // namespace CURSOR_POSITION
+    
 }
 // namespace ANSI
 
