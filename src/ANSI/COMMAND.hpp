@@ -63,7 +63,7 @@ namespace ANSI
     protected:
         template < FUNCTION _Tag, BYTE... _Data >
         struct command_string : command_string_builder< meta::make_string_t< char, BEGIN_CODE, 2 >, _Tag, _Data... >
-        { using type = command_string_builder< meta::make_string_t< char, BEGIN_CODE, 2 >, _Tag, _Data... >::type; };
+        { using type = typename command_string_builder< meta::make_string_t< char, BEGIN_CODE, 2 >, _Tag, _Data... >::type; };
 
         template < FUNCTION _Tag, BYTE... _Data >
         using command_string_t = typename command_string< _Tag, _Data... >::type;
@@ -125,7 +125,7 @@ namespace ANSI
     // Recursively merge the first two commands.
     template < FUNCTION _Type, BYTE... _Data_1, BYTE... _Data_2, class... _Rest >
     struct merge< COMMAND< _Type, _Data_1... >, COMMAND< _Type, _Data_2... >, _Rest... > : merge< COMMAND< _Type, _Data_1..., _Data_2... >, _Rest... >
-    { using type = merge< COMMAND< _Type, _Data_1..., _Data_2... >, _Rest... >::type; };
+    { using type = typename merge< COMMAND< _Type, _Data_1..., _Data_2... >, _Rest... >::type; };
 
     // If there are only two commands left, capture them alone.
     template < FUNCTION _Type, BYTE... _Data_1, BYTE... _Data_2 >
