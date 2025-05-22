@@ -13,7 +13,7 @@ namespace meta
 		using char_type		= _Char;
 		using type			= string< _Char, _Elems... >;
 		using value_type	= const char_type*;
-		static constexpr char value[] = { _Elems... };
+		static constexpr char value[] = { _Elems..., 0 };
 	};
 	
 	// Used to get the value type of the string, usually called without the _Elems.
